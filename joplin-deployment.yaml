@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joplin-server
+  namespace: joplin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joplin-server
+  template:
+    metadata:
+      labels:
+        app: joplin-server
+    spec:
+      containers:
+        - name: joplin
+          image: joplin/server:latest
+          ports:
+            - containerPort: 22300
+          env:
+            - name: APP_PORT
+              value: "22300"
+            - name: APP_BASE_URL
+              value: "https://notes.meinedomain.de"
+            - name: DB_CLIENT
+              value: "pg"
+            - name: POSTGRES_PASSWORD
+              value: "supergeheimespasswort"
+            - name: POSTGRES_DATABASE
+              value: "joplin"
+            - name: POSTGRES_USER
+              value: "joplin"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_HOST
+              value: "joplin-db-postgresql.joplin.svc.cluster.local"
+volumeMounts:
+  - name: joplin-data
+    mountPath: /home/joplin/data
+volumes:
+  - name: joplin-data
+    persistentVolumeClaim:
+      claimName: joplin-data-pvc
