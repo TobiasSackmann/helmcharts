@@ -1,6 +1,6 @@
 # Helmcharts
 
-A repository for helm chart.
+A repository for helm charts.
 
 ## Content
 
