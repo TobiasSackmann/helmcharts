@@ -1,0 +1,18 @@
+apiVersion: v2
+name: joplin
+description: A Helm chart for deploying Joplin Server
+type: application
+version: 0.1.0           # chart version
+appVersion: "latest"     # Joplin Server image tag
+maintainers:
+  - name: Your Name
+    email: you@example.com
+sources:
+  - https://github.com/laurent22/joplin
+home: https://joplinapp.org
+keywords:
+  - notes
+  - markdown
+  - self-hosted
+  - joplin
+icon: https://joplinapp.org/images/Icon512.png

@@ -1,0 +1,11 @@
+{{- if and .Values.persistence (hasKey .Values.persistence "enabled") .Values.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "joplin.fullname" . }}-data
+spec:
+  accessModes: {{ toYaml .Values.persistence.accessModes | nindent 2 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+{{- end }}

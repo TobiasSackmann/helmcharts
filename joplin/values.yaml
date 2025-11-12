@@ -32,3 +32,8 @@ ingress:
     - secretName: joplin-tls
       hosts:
         - notes.meinedomain.de
+persistence:
+  enabled: true
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
