@@ -1,8 +1,11 @@
-# .github/workflows/release.yml
 name: Release Helm charts
 on:
   push:
     branches: [ main ]
+
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -18,5 +21,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add *.tgz index.yaml
-          git commit -m "Auto-release chart"
+          git commit -m "Auto-release chart" || echo "No changes to commit"
           git push
