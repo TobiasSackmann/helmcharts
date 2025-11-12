@@ -1,0 +1,22 @@
+# .github/workflows/release.yml
+name: Release Helm charts
+on:
+  push:
+    branches: [ main ]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - run: |
+          helm lint joplin
+          helm package joplin
+          helm repo index . --url https://tobiassackmann.github.io/helmcharts
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add *.tgz index.yaml
+          git commit -m "Auto-release chart"
+          git push
