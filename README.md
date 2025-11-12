@@ -1,2 +1,7 @@
-# joplin-helmchart
-A Helm Chart for the Jolpin open source note-taking app.
+# Helmcharts
+
+A repository for helm chart.
+
+## Content
+
+* Joplin
