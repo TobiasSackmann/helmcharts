@@ -18,6 +18,6 @@ keywords:
 icon: https://joplinapp.org/images/Icon512.png
 dependencies:
   - name: postgresql
-    version: 18.1.0
+    version: 18.1.9
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
