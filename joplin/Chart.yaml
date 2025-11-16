@@ -2,8 +2,8 @@ apiVersion: v2
 name: joplin
 description: A Helm chart for deploying Joplin Server
 type: application
-version: 0.1.0           # chart version
-appVersion: "latest"     # Joplin Server image tag
+version: 0.1.1
+appVersion: "latest"
 maintainers:
   - name: Tobias Sackmann
     email: tobas.gerhard.sackmann@gmail.com
