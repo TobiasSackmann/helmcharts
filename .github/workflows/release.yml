@@ -76,6 +76,14 @@ jobs:
           fi
 
           NEW="$MAJOR.$MINOR.$PATCH"
+
+          # Check if tag already exists
+          while git rev-parse "v$NEW" >/dev/null 2>&1; do
+            echo "Tag v$NEW already exists, incrementing patch..."
+            PATCH=$((PATCH + 1))
+            NEW="$MAJOR.$MINOR.$PATCH"
+          done
+
           echo "new=$NEW" >> $GITHUB_OUTPUT
 
       ###########################################
