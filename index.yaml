@@ -3,7 +3,34 @@ entries:
   joplin:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T14:34:40.196781876Z"
+    created: "2025-11-16T15:54:03.751571789Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.1.9
+    description: A Helm chart for deploying Joplin Server
+    digest: 8c53f102c1daea64323bcaf0e980d7992fde210e854831f061771a5deec22cfb
+    home: https://joplinapp.org
+    icon: https://joplinapp.org/images/Icon512.png
+    keywords:
+    - notes
+    - markdown
+    - self-hosted
+    - joplin
+    maintainers:
+    - email: tobas.gerhard.sackmann@gmail.com
+      name: Tobias Sackmann
+    name: joplin
+    sources:
+    - https://github.com/laurent22/joplin
+    type: application
+    urls:
+    - https://tobiassackmann.github.io/helmcharts/joplin-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-11-16T15:54:03.746348976Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -30,7 +57,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T14:34:40.191803422Z"
+    created: "2025-11-16T15:54:03.741034422Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -57,7 +84,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T14:34:40.187226521Z"
+    created: "2025-11-16T15:54:03.735681455Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -84,7 +111,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T14:34:40.181575107Z"
+    created: "2025-11-16T15:54:03.730889011Z"
     description: A Helm chart for deploying Joplin Server
     digest: ee597ad0760ddb4ee2bf131bb662540139da5c0734f0dd0513584ce1d334e1f4
     home: https://joplinapp.org
@@ -104,4 +131,4 @@ entries:
     urls:
     - https://tobiassackmann.github.io/helmcharts/joplin-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-16T14:34:40.181174507Z"
+generated: "2025-11-16T15:54:03.729628917Z"
