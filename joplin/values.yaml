@@ -49,8 +49,6 @@ postgresql:
   auth:
     database: joplin
     username: joplin
-    # existingSecret: joplin-postgresql
-    # existingSecretPasswordKey: password
 
   image:
     registry: docker.io
