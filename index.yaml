@@ -3,14 +3,14 @@ entries:
   joplin:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T12:43:21.078959883Z"
+    created: "2025-11-16T13:45:16.89662947Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
-      version: 15.5.14
+      version: 18.1.9
     description: A Helm chart for deploying Joplin Server
-    digest: d3e55549639378db6f9ec9fd2c0e66b0b1da3a00a10f2eb1f09160781750dbdf
+    digest: 9549ad24b3ec3bc23baaa226a055bc1a8c57af92e60dfb047423369478d8ec2c
     home: https://joplinapp.org
     icon: https://joplinapp.org/images/Icon512.png
     keywords:
@@ -30,7 +30,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-16T12:43:21.073676945Z"
+    created: "2025-11-16T13:45:16.890976844Z"
     description: A Helm chart for deploying Joplin Server
     digest: ee597ad0760ddb4ee2bf131bb662540139da5c0734f0dd0513584ce1d334e1f4
     home: https://joplinapp.org
@@ -50,4 +50,4 @@ entries:
     urls:
     - https://tobiassackmann.github.io/helmcharts/joplin-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-16T12:43:21.073286495Z"
+generated: "2025-11-16T13:45:16.890575264Z"
