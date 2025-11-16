@@ -14,6 +14,20 @@ spec:
       labels:
         app: {{ include "joplin.name" . }}
     spec:
+      initContainers:
+        - name: wait-for-db-secret
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until [ -f /run/secrets/postgres-password ]; do
+                echo "Waiting for secret..."
+                sleep 2
+              done
+          volumeMounts:
+            - name: db-secret
+              mountPath: /run/secrets
       containers:
         - name: joplin
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
