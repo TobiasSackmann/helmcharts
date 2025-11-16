@@ -1,4 +1,5 @@
-name: Release Helm charts
+name: Release Helm Charts
+
 on:
   push:
     branches: [ main ]
@@ -9,17 +10,135 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: azure/setup-helm@v4
-      - run: |
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      ###########################################
+      # 1. Read current chart version
+      ###########################################
+      - name: Read Chart version
+        id: chart_version
+        run: |
+          VERSION=$(grep '^version:' joplin/Chart.yaml | awk '{print $2}')
+          echo "current=$VERSION" >> $GITHUB_OUTPUT
+
+      ###########################################
+      # 2. Read image tag from values.yaml → appVersion
+      ###########################################
+      - name: Read image tag for appVersion
+        id: image_tag
+        run: |
+          TAG=$(yq '.image.tag' joplin/values.yaml)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      ###########################################
+      # 3. Determine bump type (feat → minor, fix → patch)
+      ###########################################
+      - name: Determine bump type
+        id: bump_type
+        run: |
+          MSG=$(git log -1 --pretty=%s)
+          echo "Commit message: $MSG"
+
+          if [[ $MSG == feat:* ]]; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          elif [[ $MSG == fix:* ]]; then
+            echo "type=patch" >> $GITHUB_OUTPUT
+          else
+            echo "type=none" >> $GITHUB_OUTPUT
+          fi
+
+      ###########################################
+      # 4. Calculate new version
+      ###########################################
+      - name: Calculate new version
+        id: new_version
+        run: |
+          OLD=${{ steps.chart_version.outputs.current }}
+          TYPE=${{ steps.bump_type.outputs.type }}
+
+          MAJOR=$(echo $OLD | cut -d. -f1)
+          MINOR=$(echo $OLD | cut -d. -f2)
+          PATCH=$(echo $OLD | cut -d. -f3)
+
+          if [[ "$TYPE" == "minor" ]]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [[ "$TYPE" == "patch" ]]; then
+            PATCH=$((PATCH + 1))
+          else
+            echo "new=$OLD" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          NEW="$MAJOR.$MINOR.$PATCH"
+          echo "new=$NEW" >> $GITHUB_OUTPUT
+
+      ###########################################
+      # 5. Update Chart.yaml version + appVersion
+      ###########################################
+      - name: Update Chart.yaml
+        if: steps.bump_type.outputs.type != 'none'
+        run: |
+          sed -i "s/^version:.*/version: ${{ steps.new_version.outputs.new }}/" joplin/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${{ steps.image_tag.outputs.tag }}\"/" joplin/Chart.yaml
+
+      ###########################################
+      # 6. Generate changelog since last tag
+      ###########################################
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            LOG=$(git log --pretty=format:"- %s")
+          else
+            LOG=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
+          fi
+
+          echo "log<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      ###########################################
+      # 7. Helm lint + package + index
+      ###########################################
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Package Helm chart
+        run: |
           helm lint joplin
           helm package joplin
           helm repo index . --url https://tobiassackmann.github.io/helmcharts
+
+      ###########################################
+      # 8. Commit updated files and push tag
+      ###########################################
       - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add *.tgz index.yaml
-          git commit -m "Auto-release chart" || echo "No changes to commit"
-          git push
+          git add joplin/Chart.yaml *.tgz index.yaml
+          git commit -m "release: v${{ steps.new_version.outputs.new }}" || echo "Nothing to commit"
+          git tag "v${{ steps.new_version.outputs.new }}"
+          git push --follow-tags
+
+      ###########################################
+      # 9. Create GitHub Release with changelog
+      ###########################################
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: steps.bump_type.outputs.type != 'none'
+        with:
+          tag_name: v${{ steps.new_version.outputs.new }}
+          name: v${{ steps.new_version.outputs.new }}
+          body: |
+            ## Changes
+            ${{ steps.changelog.outputs.log }}
+          files: |
+            *.tgz

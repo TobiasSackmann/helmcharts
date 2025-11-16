@@ -37,3 +37,9 @@ persistence:
   size: 1Gi
   accessModes:
     - ReadWriteOnce
+postgresql:
+  enabled: true
+  auth:
+    username: joplin
+    password: joplinpass
+    database: joplindb

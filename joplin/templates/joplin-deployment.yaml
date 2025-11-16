@@ -25,10 +25,33 @@ spec:
             - name: {{ $key }}
               value: "{{ $value }}"
             {{- end }}
+
+            - name: DB_CLIENT
+              value: "pg"
+
+            - name: POSTGRES_HOST
+              value: "{{ include "joplin.fullname" . }}-postgresql"
+
+            - name: POSTGRES_PORT
+              value: "5432"
+
+            - name: POSTGRES_DATABASE
+              value: "{{ .Values.postgresql.auth.database }}"
+
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgresql.auth.username }}"
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "joplin.fullname" . }}-postgresql"
+                  key: postgres-password
+
           volumeMounts:
             - name: joplin-data
               mountPath: /home/joplin/data
+
       volumes:
         - name: joplin-data
           persistentVolumeClaim:
-            claimName: {{ include "joplin.fullname" . }}-data
+            claimName: "{{ include "joplin.fullname" . }}-data"
