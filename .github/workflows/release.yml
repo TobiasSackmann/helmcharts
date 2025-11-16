@@ -105,10 +105,14 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       ###########################################
-      # 7. Helm lint + package + index
+      # 7. Helm dependency update + lint + package + index
       ###########################################
       - name: Setup Helm
         uses: azure/setup-helm@v4
+
+      - name: Update Helm dependencies
+        run: |
+          helm dependency update joplin
 
       - name: Package Helm chart
         run: |

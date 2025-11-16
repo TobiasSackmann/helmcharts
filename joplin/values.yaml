@@ -39,7 +39,24 @@ persistence:
     - ReadWriteOnce
 postgresql:
   enabled: true
-  auth:
-    username: joplin
-    password: joplinpass
-    database: joplindb
+
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
+    tag: 17.6.0-debian-12-r4
+    pullPolicy: IfNotPresent
+
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+    security:
+      allowInsecureImages: true
+
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+  security:
+    ## @param global.security.allowInsecureImages Allows skipping image verification
+    allowInsecureImages: true
