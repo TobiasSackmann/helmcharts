@@ -15,7 +15,7 @@ env:
     valueFrom:
       secretKeyRef:
         name: joplin-postgresql
-        key: postgres-password
+        key: password
 
 service:
   type: ClusterIP
