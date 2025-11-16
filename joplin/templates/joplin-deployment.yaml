@@ -21,32 +21,17 @@ spec:
           ports:
             - containerPort: 22300
           env:
-            {{- range $key, $value := .Values.env }}
+          {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
-              value: "{{ $value }}"
-            {{- end }}
-
-            - name: DB_CLIENT
-              value: "pg"
-
-            - name: POSTGRES_HOST
-              value: "{{ include "joplin.fullname" . }}-postgresql"
-
-            - name: POSTGRES_PORT
-              value: "5432"
-
-            - name: POSTGRES_DATABASE
-              value: "{{ .Values.postgresql.auth.database }}"
-
-            - name: POSTGRES_USER
-              value: "{{ .Values.postgresql.auth.username }}"
-
-            - name: POSTGRES_PASSWORD
+              {{- if $value.valueFrom }}
               valueFrom:
                 secretKeyRef:
-                  name: "{{ include "joplin.fullname" . }}-postgresql"
-                  key: postgres-password
-
+                  name: {{ $value.valueFrom.secretKeyRef.name }}
+                  key: {{ $value.valueFrom.secretKeyRef.key }}
+              {{- else }}
+              value: "{{ $value }}"
+              {{- end }}
+          {{- end }}
           volumeMounts:
             - name: joplin-data
               mountPath: /home/joplin/data

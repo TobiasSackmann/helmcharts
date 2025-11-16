@@ -5,13 +5,17 @@ image:
 
 env:
   APP_PORT: "22300"
-  APP_BASE_URL: "https://notes.meinedomain.de"
+  APP_BASE_URL: "https://joplin.my-domain.de"
   DB_CLIENT: "pg"
-  POSTGRES_PASSWORD: "supergeheimespasswort"
   POSTGRES_DATABASE: "joplin"
   POSTGRES_USER: "joplin"
   POSTGRES_PORT: "5432"
-  POSTGRES_HOST: "joplin-db-postgresql.joplin.svc.cluster.local"
+  POSTGRES_HOST: "joplin-joplin-postgresql"
+  POSTGRES_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: joplin-joplin-postgresql
+        key: postgres-password
 
 service:
   type: ClusterIP
@@ -24,14 +28,14 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
   hosts:
-    - host: notes.meinedomain.de
+    - host: joplin.my-domain.de
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: joplin-tls
       hosts:
-        - notes.meinedomain.de
+        - joplin.my-domain.de
 persistence:
   enabled: true
   size: 1Gi
@@ -39,6 +43,10 @@ persistence:
     - ReadWriteOnce
 postgresql:
   enabled: true
+
+  auth:
+    database: joplin
+    username: joplin
 
   image:
     registry: docker.io
