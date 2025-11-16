@@ -10,11 +10,11 @@ env:
   POSTGRES_DATABASE: "joplin"
   POSTGRES_USER: "joplin"
   POSTGRES_PORT: "5432"
-  POSTGRES_HOST: joplin-joplin-postgresql
+  POSTGRES_HOST: joplin-postgresql
   POSTGRES_PASSWORD:
     valueFrom:
       secretKeyRef:
-        name: joplin-joplin-postgresql
+        name: joplin-postgresql
         key: postgres-password
 
 service:
@@ -43,7 +43,7 @@ persistence:
     - ReadWriteOnce
 postgresql:
   enabled: true
-
+  fullnameOverride: joplin-postgresql
   auth:
     database: joplin
     username: joplin
