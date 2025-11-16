@@ -23,7 +23,7 @@ service:
 
 ingress:
   enabled: true
-  className: "nginx" # oder "traefik" je nach Cluster
+  className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   hosts:
@@ -35,17 +35,23 @@ ingress:
     - secretName: joplin-tls
       hosts:
         - joplin.my-domain.de
+
 persistence:
   enabled: true
   size: 1Gi
   accessModes:
     - ReadWriteOnce
+
 postgresql:
   enabled: true
   fullnameOverride: joplin-postgresql
+
   auth:
     database: joplin
     username: joplin
+    password: ""                   # auto-generate
+    existingSecret: joplin-postgresql
+    existingSecretPasswordKey: password
 
   image:
     registry: docker.io
@@ -53,17 +59,13 @@ postgresql:
     tag: 17.6.0-debian-12-r4
     pullPolicy: IfNotPresent
 
-  global:
-    imageRegistry: ""
-    imagePullSecrets: []
-    security:
-      allowInsecureImages: true
-
   primary:
     persistence:
       enabled: true
       size: 8Gi
 
-  security:
-    ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: true
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+    security:
+      allowInsecureImages: true
