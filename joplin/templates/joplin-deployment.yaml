@@ -27,7 +27,7 @@ spec:
                 {{- if hasKey $value "valueFrom" }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $value.valueFrom.secretKeyRef.name }}
+                  name: {{ tpl $value.valueFrom.secretKeyRef.name $ }}
                   key: {{ $value.valueFrom.secretKeyRef.key }}
                 {{- end }}
               {{- else }}

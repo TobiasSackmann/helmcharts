@@ -10,11 +10,11 @@ env:
   POSTGRES_DATABASE: "joplin"
   POSTGRES_USER: "joplin"
   POSTGRES_PORT: "5432"
-  POSTGRES_HOST: "joplin-joplin-postgresql"
+  POSTGRES_HOST: "{{ include \"joplin.fullname\" . }}-postgresql"
   POSTGRES_PASSWORD:
     valueFrom:
       secretKeyRef:
-        name: joplin-joplin-postgresql
+        name: "{{ include \"joplin.fullname\" . }}-postgresql"
         key: postgres-password
 
 service:
