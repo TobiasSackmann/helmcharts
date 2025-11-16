@@ -138,6 +138,17 @@ jobs:
           git add joplin/Chart.yaml *.tgz index.yaml
           git commit -m "release: v${{ steps.new_version.outputs.new }}" || echo "Nothing to commit"
           git tag "v${{ steps.new_version.outputs.new }}"
+
+          # Delete local tag if exists
+          git tag -d "v${{ steps.new_version.outputs.new }}" || true
+
+          # Delete remote tag if exists
+          git push origin ":refs/tags/v${{ steps.new_version.outputs.new }}" || true
+
+          # Create new tag
+          git tag "v${{ steps.new_version.outputs.new }}"
+
+          # Push commit + tag
           git push --follow-tags
 
       ###########################################
