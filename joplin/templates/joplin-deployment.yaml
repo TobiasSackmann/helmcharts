@@ -23,13 +23,11 @@ spec:
           env:
           {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
-              {{- if kindIs "map" $value }}
-                {{- if hasKey $value "valueFrom" }}
+              {{- if and (kindIs "map" $value) (hasKey $value "valueFrom") }}
               valueFrom:
                 secretKeyRef:
                   name: {{ tpl $value.valueFrom.secretKeyRef.name $ }}
                   key: {{ $value.valueFrom.secretKeyRef.key }}
-                {{- end }}
               {{- else }}
               value: "{{ $value }}"
               {{- end }}
