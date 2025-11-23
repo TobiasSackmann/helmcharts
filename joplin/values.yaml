@@ -1,3 +1,5 @@
+replicaCount: 1
+
 image:
   repository: joplin/server
   tag: latest
@@ -11,11 +13,7 @@ env:
   POSTGRES_USER: "joplin"
   POSTGRES_PORT: "5432"
   POSTGRES_HOST: joplin-postgresql
-  POSTGRES_PASSWORD:
-    valueFrom:
-      secretKeyRef:
-        name: joplin-postgresql
-        key: password
+  # NOTE: we do NOT set POSTGRES_PASSWORD here, we use the secret produced by the PostgreSQL chart.
 
 service:
   type: ClusterIP
@@ -49,6 +47,10 @@ postgresql:
   auth:
     database: joplin
     username: joplin
+    # We intentionally do NOT set password here (Option B). Bitnami chart will create a secret and a password.
+    # If you prefer a fixed password later, you can add:
+    # password: "mysecret"
+    # or existingSecret: my-secret
 
   image:
     registry: docker.io
